@@ -11,14 +11,14 @@ use UnexpectedValueException;
 
 class Transaction
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -43,7 +43,7 @@ class Transaction
     {
         try {
             $api     = new TransactionAPI();
-            $request = new TransactionRequest($this->erachain_mode);
+            $request = new TransactionRequest($this->erachain_params);
 
             switch ($method):
                 case 'height':

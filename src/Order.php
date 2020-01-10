@@ -12,14 +12,14 @@ use Sirius\Validation\Validator;
 
 class Order
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -41,8 +41,8 @@ class Order
     public function create($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $asset   = new CreateOrder($public_key, $private_key, $this->erachain_mode);
-            $request = new OrderRequest($this->erachain_mode);
+            $asset   = new CreateOrder($public_key, $private_key, $this->erachain_params);
+            $request = new OrderRequest($this->erachain_params);
 
             $this->validator
                 ->add('have_asset', 'required | integer() (' . Error::INTEGER . ')')
@@ -83,8 +83,8 @@ class Order
     public function cancel($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $asset   = new CancelOrder($public_key, $private_key, $this->erachain_mode);
-            $request = new OrderRequest($this->erachain_mode);
+            $asset   = new CancelOrder($public_key, $private_key, $this->erachain_params);
+            $request = new OrderRequest($this->erachain_params);
 
             $this->validator
                 ->add('signature', 'required | Erachain\Validation\Rule\Base58Rule');
@@ -128,7 +128,7 @@ class Order
     {
         try {
             $api     = new OrderAPI();
-            $request = new OrderRequest($this->erachain_mode);
+            $request = new OrderRequest($this->erachain_params);
 
             switch ($method):
                 case 'order':
@@ -156,7 +156,7 @@ class Order
                     $result = $api->apiexchange_volume24($request, $params);
                     break;
                 default:
-                    $transaction = new Transaction($this->erachain_mode);
+                    $transaction = new Transaction($this->erachain_params);
 
                     $result = $transaction->api($method, $params);
             endswitch;

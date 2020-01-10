@@ -11,14 +11,14 @@ use Sirius\Validation\Validator;
 
 class Status
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -46,8 +46,8 @@ class Status
     public function issue($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $status  = new IssueStatus($public_key, $private_key, $this->erachain_mode);
-            $request = new StatusRequest($this->erachain_mode);
+            $status  = new IssueStatus($public_key, $private_key, $this->erachain_params);
+            $request = new StatusRequest($this->erachain_params);
 
             $this->validator
                 ->add('type_item', 'integer() (' . Error::INTEGER . ')')
@@ -104,8 +104,8 @@ class Status
     public function set($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $status  = new SetStatus($public_key, $private_key, $this->erachain_mode);
-            $request = new StatusRequest($this->erachain_mode);
+            $status  = new SetStatus($public_key, $private_key, $this->erachain_params);
+            $request = new StatusRequest($this->erachain_params);
 
             $this->validator
                 ->add('key_status', 'required | integer() (' . Error::INTEGER . ')')

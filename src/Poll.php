@@ -12,14 +12,14 @@ use Sirius\Validation\Validator;
 
 class Poll
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -39,8 +39,8 @@ class Poll
     public function issue($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $poll    = new IssuePoll($public_key, $private_key, $this->erachain_mode);
-            $request = new PollRequest($this->erachain_mode);
+            $poll    = new IssuePoll($public_key, $private_key, $this->erachain_params);
+            $request = new PollRequest($this->erachain_params);
 
             $this->validator
                 ->add('owner', 'Erachain\Validation\Rule\Base58Rule')
@@ -82,8 +82,8 @@ class Poll
     public function vote($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $poll    = new VoteOnPoll($public_key, $private_key, $this->erachain_mode);
-            $request = new PollRequest($this->erachain_mode);
+            $poll    = new VoteOnPoll($public_key, $private_key, $this->erachain_params);
+            $request = new PollRequest($this->erachain_params);
 
             $this->validator
                 ->add('poll_key', 'required | integer() (' . Error::INTEGER . ')')
@@ -121,14 +121,14 @@ class Poll
     {
         try {
             $api     = new PollAPI();
-            $request = new PollRequest($this->erachain_mode);
+            $request = new PollRequest($this->erachain_params);
 
             switch ($method):
                 case 'getpoll':
                     $result = $api->api_getpoll($request, $params);
                     break;
                 default:
-                    $transaction = new Transaction($this->erachain_mode);
+                    $transaction = new Transaction($this->erachain_params);
 
                     $result = $transaction->api($method, $params);
             endswitch;

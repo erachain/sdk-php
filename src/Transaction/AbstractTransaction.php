@@ -13,15 +13,15 @@ abstract class AbstractTransaction
 {
     private $public_key;
     private $private_key;
-    private $erachain_mode;
+    private $erachain_params;
     private $params;
     private $transaction_type;
 
-    public function __construct($public_key, $private_key, $erachain_mode)
+    public function __construct($public_key, $private_key, $erachain_params)
     {
-        $this->public_key    = $public_key;
-        $this->private_key   = $private_key;
-        $this->erachain_mode = $erachain_mode;
+        $this->public_key      = $public_key;
+        $this->private_key     = $private_key;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -136,7 +136,7 @@ abstract class AbstractTransaction
     {
         $base = new Base();
 
-        $port        = ($this->erachain_mode == 'live') ? 9046 : 9066;
+        $port        = ($this->erachain_params['mode'] == 'live') ? 9046 : 9066;
         $dataForSign = array_merge($data, ConvertToBytes::from_int32($port));
 
         return $base->get_sign($dataForSign, $this->private_key);
@@ -235,7 +235,7 @@ abstract class AbstractTransaction
         if ($encrypted) {
             $base   = new Base();
             $base58 = new Base58();
-            $r_base = new BaseRequest($this->erachain_mode);
+            $r_base = new BaseRequest($this->erachain_params);
 
             $recipient_pk = $r_base->get_public_key_by_address($recipient);
 
@@ -257,14 +257,16 @@ abstract class AbstractTransaction
     {
         $scale = 0;
 
-        if ( ! empty($amount[1]) && strlen($amount[1]) !== 8) {
+        if (isset($amount[1]) && strlen($amount[1]) !== 8) {
             $scale = strlen($amount[1]) - 8;
+        } elseif ( ! isset($amount[1])) {
+            $scale = -8;
         }
 
         if ($scale !== 0 || $shift_message) {
             $type = $this->get_transaction_type();
 
-            if ($scale < 8 && $scale > 0) {
+            if ($scale < 0) {
                 $type[$type_index] = $scale + 32;
             } else {
                 $type[$type_index] = $scale;

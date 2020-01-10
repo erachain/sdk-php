@@ -10,14 +10,14 @@ use Sirius\Validation\Validator;
 
 class Vouch
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -37,8 +37,8 @@ class Vouch
     public function sign($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $vouch   = new RVouch($public_key, $private_key, $this->erachain_mode);
-            $request = new VouchRequest($this->erachain_mode);
+            $vouch   = new RVouch($public_key, $private_key, $this->erachain_params);
+            $request = new VouchRequest($this->erachain_params);
 
             $this->validator
                 ->add('block_height', 'required | integer() (' . Error::INTEGER . ')')
