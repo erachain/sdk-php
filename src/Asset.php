@@ -12,14 +12,14 @@ use Sirius\Validation\Validator;
 
 class Asset
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -45,8 +45,8 @@ class Asset
     public function issue($public_key = null, $private_key = null, array $params = array())
     {
         try {
-            $asset   = new IssueAsset($public_key, $private_key, $this->erachain_mode);
-            $request = new AssetRequest($this->erachain_mode);
+            $asset   = new IssueAsset($public_key, $private_key, $this->erachain_params);
+            $request = new AssetRequest($this->erachain_params);
 
             $this->validator
                 ->add('owner', 'Erachain\Validation\Rule\Base58Rule')
@@ -95,8 +95,8 @@ class Asset
     public function send($public_key = null, $private_key = null, array $params = array())
     {
         try {
-            $asset   = new SendAsset($public_key, $private_key, $this->erachain_mode);
-            $request = new AssetRequest($this->erachain_mode);
+            $asset   = new SendAsset($public_key, $private_key, $this->erachain_params);
+            $request = new AssetRequest($this->erachain_params);
 
             $this->validator
                 ->add('recipient', 'required | Erachain\Validation\Rule\Base58Rule')
@@ -147,7 +147,7 @@ class Asset
     {
         try {
             $api     = new AssetAPI();
-            $request = new AssetRequest($this->erachain_mode);
+            $request = new AssetRequest($this->erachain_params);
 
             switch ($method):
                 case 'addressassets':
@@ -178,7 +178,7 @@ class Asset
                     $result = $api->api_assetheight($request);
                     break;
                 default:
-                    $transaction = new Transaction($this->erachain_mode);
+                    $transaction = new Transaction($this->erachain_params);
 
                     $result = $transaction->api($method, $params);
             endswitch;

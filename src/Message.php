@@ -11,14 +11,14 @@ use Sirius\Validation\Validator;
 
 class Message
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -43,8 +43,8 @@ class Message
     public function send($public_key = null, $private_key = null, array $params = [], $telegram = false)
     {
         try {
-            $message = new SendMessage($public_key, $private_key, $this->erachain_mode);
-            $request = new MessageRequest($this->erachain_mode);
+            $message = new SendMessage($public_key, $private_key, $this->erachain_params);
+            $request = new MessageRequest($this->erachain_params);
 
             $this->validator
                 ->add('recipient', 'required | Erachain\Validation\Rule\Base58Rule')
@@ -85,14 +85,14 @@ class Message
     {
         try {
             $api     = new TransactionAPI();
-            $request = new MessageRequest($this->erachain_mode);
+            $request = new MessageRequest($this->erachain_params);
 
             switch ($method):
                 case 'getbyaddress':
                     $result = $api->apirecords_getbyaddress($request, $params);
                     break;
                 default:
-                    $transaction = new Transaction($this->erachain_mode);
+                    $transaction = new Transaction($this->erachain_params);
 
                     $result = $transaction->api($method, $params);
             endswitch;

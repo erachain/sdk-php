@@ -13,14 +13,14 @@ use Sirius\Validation\Validator;
 
 class Person
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -53,7 +53,7 @@ class Person
     public function info($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $person = new PersonInfo($public_key, $private_key, $this->erachain_mode);
+            $person = new PersonInfo($public_key, $private_key, $this->erachain_params);
 
             $this->validator
                 ->add('owner', 'Erachain\Validation\Rule\Base58Rule')
@@ -104,8 +104,8 @@ class Person
     public function issue($public_key, $private_key, array $params = [])
     {
         try {
-            $person  = new IssuePerson($public_key, $private_key, $this->erachain_mode);
-            $request = new PersonRequest($this->erachain_mode);
+            $person  = new IssuePerson($public_key, $private_key, $this->erachain_params);
+            $request = new PersonRequest($this->erachain_params);
 
             $this->validator
                 ->add('raw', 'required | Erachain\Validation\Rule\Base58Rule');
@@ -142,8 +142,8 @@ class Person
     public function certify($public_key = null, $private_key = null, array $params = [])
     {
         try {
-            $person  = new CertifyPerson($public_key, $private_key, $this->erachain_mode);
-            $request = new PersonRequest($this->erachain_mode);
+            $person  = new CertifyPerson($public_key, $private_key, $this->erachain_params);
+            $request = new PersonRequest($this->erachain_params);
 
             $this->validator
                 ->add('person_key', 'required | integer() (' . Error::INTEGER . ')')
@@ -189,7 +189,7 @@ class Person
     {
         try {
             $api     = new PersonAPI();
-            $request = new PersonRequest($this->erachain_mode);
+            $request = new PersonRequest($this->erachain_params);
 
             switch ($method):
                 case 'personheight':
@@ -220,7 +220,7 @@ class Person
                     $result = $api->api_personkeybyownerpublickey($request, $params);
                     break;
                 default:
-                    $transaction = new Transaction($this->erachain_mode);
+                    $transaction = new Transaction($this->erachain_params);
 
                     $result = $transaction->api($method, $params);
             endswitch;
