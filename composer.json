@@ -1,0 +1,37 @@
+{
+  "name": "erachain/sdk-php",
+  "description": "Библиотека для работы с блокчейн сетью Erachain",
+  "keywords": [
+    "erachain",
+    "blockchain",
+    "php",
+    "sdk",
+    "api",
+    "library"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Erachain",
+      "email": "info@erachain.org",
+      "homepage": "https://erachain.org"
+    }
+  ],
+  "require": {
+    "php-64bit": ">=5.6",
+    "paragonie/random_compat": "<9.99",
+    "paragonie/sodium_compat": "1.12.*",
+    "stephenhill/base58": "~1.0",
+    "siriusphp/validation": "*",
+    "brick/math": "0.5",
+    "ext-openssl": "*",
+    "ext-bcmath": "*",
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Erachain\\": "src/"
+    }
+  }
+}
