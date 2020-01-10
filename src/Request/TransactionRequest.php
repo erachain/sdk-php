@@ -8,9 +8,9 @@ class TransactionRequest
 {
     protected $request;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
-        $this->request = new Request($erachain_mode);
+        $this->request = new Request($erachain_params);
     }
 
     /**

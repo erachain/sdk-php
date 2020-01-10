@@ -11,14 +11,14 @@ use UnexpectedValueException;
 
 class Telegram
 {
-    private $erachain_mode;
+    private $erachain_params;
     private $validator;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
         $this->validator = new Validator;
 
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -40,7 +40,7 @@ class Telegram
      */
     public function send($public_key = null, $private_key = null, array $params = [])
     {
-        $message = new Message($this->erachain_mode);
+        $message = new Message($this->erachain_params);
 
         return $message->send($public_key, $private_key, $params, true);
     }
@@ -65,7 +65,7 @@ class Telegram
     {
         try {
             $api     = new TelegramAPI();
-            $request = new TelegramRequest($this->erachain_mode);
+            $request = new TelegramRequest($this->erachain_params);
 
             switch ($method):
                 case 'getbysignature':

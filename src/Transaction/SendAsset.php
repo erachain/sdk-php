@@ -7,9 +7,9 @@ use StephenHill\Base58;
 
 class SendAsset extends AbstractTransaction
 {
-    public function __construct($public_key, $private_key, $erachain_mode)
+    public function __construct($public_key, $private_key, $erachain_params)
     {
-        parent::__construct($public_key, $private_key, $erachain_mode);
+        parent::__construct($public_key, $private_key, $erachain_params);
 
         $this->set_default_params(array(
             'recipient' => '',

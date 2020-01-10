@@ -9,12 +9,12 @@ use Erachain\Request\BaseRequest;
  *
  * @author Erachain <info@erachain.org>
  * @license MIT
- * @version 1.0.0
+ * @version 1.0
  * @package Erachain
  */
 class Erachain
 {
-    private $erachain_mode;
+    private $erachain_params;
 
     public $crypto;
     public $person;
@@ -27,20 +27,23 @@ class Erachain
     public $vouch;
     public $transaction;
 
-    public function __construct($erachain_mode = 'dev')
+    public function __construct($erachain_mode = 'dev', $server_link = null)
     {
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = array(
+            'mode'   => $erachain_mode,
+            's_link' => $server_link,
+        );
 
         $this->crypto      = new Crypto();
-        $this->person      = new Person($erachain_mode);
-        $this->asset       = new Asset($erachain_mode);
-        $this->message     = new Message($erachain_mode);
-        $this->telegram    = new Telegram($erachain_mode);
-        $this->order       = new Order($erachain_mode);
-        $this->status      = new Status($erachain_mode);
-        $this->poll        = new Poll($erachain_mode);
-        $this->vouch       = new Vouch($erachain_mode);
-        $this->transaction = new Transaction($erachain_mode);
+        $this->person      = new Person($this->erachain_params);
+        $this->asset       = new Asset($this->erachain_params);
+        $this->message     = new Message($this->erachain_params);
+        $this->telegram    = new Telegram($this->erachain_params);
+        $this->order       = new Order($this->erachain_params);
+        $this->status      = new Status($this->erachain_params);
+        $this->poll        = new Poll($this->erachain_params);
+        $this->vouch       = new Vouch($this->erachain_params);
+        $this->transaction = new Transaction($this->erachain_params);
     }
 
     /**
@@ -55,7 +58,7 @@ class Erachain
      */
     public function api($request = null, $params = null, $method = 'get')
     {
-        $base_request = new BaseRequest($this->erachain_mode);
+        $base_request = new BaseRequest($this->erachain_params);
 
         return $base_request->request_api($request, $params, $method);
     }

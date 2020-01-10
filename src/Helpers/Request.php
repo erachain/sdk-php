@@ -9,11 +9,11 @@ class Request
     const STATUS_OK = 'OK';
     const STATUS_ERROR = 'ERROR';
 
-    protected $erachain_mode;
+    protected $erachain_params;
 
-    public function __construct($erachain_mode)
+    public function __construct($erachain_params)
     {
-        $this->erachain_mode = $erachain_mode;
+        $this->erachain_params = $erachain_params;
     }
 
     /**
@@ -27,7 +27,7 @@ class Request
      */
     public function send($url, $param = null, $type = 'get')
     {
-        $server_list = $this->get_servers($this->erachain_mode);
+        $server_list = $this->get_servers($this->erachain_params);
 
         if (empty($server_list)) {
             throw new UnexpectedValueException(Error::SERVER_LIST);
@@ -143,14 +143,22 @@ class Request
     /**
      * Получение списка активных нод
      *
-     * @param string $erachain_mode Режим работы (тестовый / боевой)
+     * @param array $erachain_params Параметры для работы с сетью Erachain
+     *  $erachain_params = [
+     *      'mode' => Режим работы сети (dev/live),
+     *      's_link' => Ссылка на ноду (пример: http://206.81.27.15:9067/),
+     * ]
      *
      * @return array|bool Возвращает список доступных серверов
      */
-    private function get_servers($erachain_mode)
+    private function get_servers($erachain_params)
     {
-        if ( ! in_array($erachain_mode, ['dev', 'live'])) {
+        if ( ! in_array($erachain_params['mode'], ['dev', 'live'])) {
             throw new UnexpectedValueException(Error::MODE_ERACHAIN);
+        }
+
+        if ($erachain_params['s_link'] !== null) {
+            return [$erachain_params['s_link']];
         }
 
         $file_servers = dirname(dirname(__FILE__)) . '/server.json';
@@ -159,7 +167,7 @@ class Request
 
         $servers_json = file_get_contents($file_servers);
 
-        $arr_servers = json_decode($servers_json, true)[$erachain_mode];
+        $arr_servers = json_decode($servers_json, true)[$erachain_params['mode']];
 
         if (empty($arr_servers)) {
             throw new UnexpectedValueException(Error::SERVER_LIST);
